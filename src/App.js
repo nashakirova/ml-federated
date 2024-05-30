@@ -48,6 +48,9 @@ function App() {
   let error;
   let disabled = false;
 
+  const keyScore = (value, score) => {
+    return (value === options[0] || value === options[1]) && score === 1 ? 1 : (value === options[2] || value === options[3]) && score === 0 ? 1 : 0;
+  }
 
   const handleChange = (event, field) => {
     const localState = state;
@@ -65,10 +68,12 @@ function App() {
       disabled = false;
       return;
     }
-    setResult(Object.keys(state).reduce((acc, key) =>
-      scores[key] ? scores[key] + acc : acc
+    setResult(Object.keys(state).reduce((acc, key) => 
+      scores[key]!==undefined ? keyScore(state[key], scores[key]) + acc : acc 
+    
       , 0));
     forceUpdate();
+    console.log(result);
     event.preventDefault();
   }
 
@@ -94,10 +99,10 @@ function App() {
           </Typography>
         </AccordionDetails>
       </Accordion>
-      {!result &&<Box component="form"
-       onSubmit={processData}
+      {!result && <Box component="form"
+        onSubmit={processData}
         sx={{ mt: 3 }}
-        >
+      >
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField label="Age"
@@ -177,28 +182,29 @@ function App() {
         </Grid>
       </Box>}
       {
-        result && 
+        !!result &&
         <Box sx={{ minWidth: 275 }}>
-      <Card variant="outlined">
-      
-    <CardContent>
-      <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-        The result is
+          <Card variant="outlined">
+
+            <CardContent>
+              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                The result is
       </Typography>
-      <Typography variant="h5" component="div">
-        {result >= 6 ? "You likely have autism" : "You likely don't have autism"}
+              <Typography variant="h5" component="div">
+                {result >= 6 ? "You likely have autism" : "You likely don't have autism"}
+              </Typography>
+              <Typography variant="body2">
+                Score: {result}
+                <br />
+                Please consult with a specilist to validate
       </Typography>
-      <Typography variant="body2">
-        Score: {result}
-        <br/>
-        Please consult with a specilist to validate
-      </Typography>
-    </CardContent>
-    <CardActions>
-      <Button size="small" target ="_blank" href="https://thespectrum.org.au/autism-diagnosis/checklist-adults/">Learn More</Button>
-    </CardActions>
-    </Card>
-    </Box>
+            </CardContent>
+            <CardActions>
+              <Button size="small" onClick={() => setResult(0)}>Back</Button>
+              <Button size="small" target="_blank" href="https://thespectrum.org.au/autism-diagnosis/checklist-adults/">Learn More</Button>
+            </CardActions>
+          </Card>
+        </Box>
       }
     </Container>
   );
