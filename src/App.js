@@ -42,6 +42,7 @@ function App() {
     A8: '',
     A9: '',
     A10: '',
+    diagnosis: '',
   });
   const [, forceUpdate] = useReducer(o => !o);
 
@@ -68,9 +69,9 @@ function App() {
       disabled = false;
       return;
     }
-    setResult(Object.keys(state).reduce((acc, key) => 
-      scores[key]!==undefined ? keyScore(state[key], scores[key]) + acc : acc 
-    
+    setResult(Object.keys(state).reduce((acc, key) =>
+      scores[key] !== undefined ? keyScore(state[key], scores[key]) + acc : acc
+
       , 0));
     forceUpdate();
     console.log(result);
@@ -177,6 +178,17 @@ function App() {
                 {optionsHtml}
               </RadioGroup>
             </Grid>)}
+          <Grid item key="diagnosis">
+            <FormLabel id="diagnosis_q">Is patient diagnosed with autism</FormLabel>
+            <RadioGroup label="Is patient diagnosed with autism"
+              name="Diagnosis"
+              onChange={(event) => handleChange(event.target.value, 'diagnosis')}
+              value={state["diagnosis"]}>
+              <FormControlLabel value={1} control={<Radio />} key="Diagnosed" label="Diagnosed" />
+              <FormControlLabel value={0} control={<Radio />} key="Not Diagnosed" label="Not Diagnosed" />
+            </RadioGroup>
+
+          </Grid>
           <Grid item>
             <Button type="submit">Submit</Button></Grid>
         </Grid>
