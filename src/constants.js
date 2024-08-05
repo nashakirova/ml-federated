@@ -24,3 +24,5 @@ export const questions = [
 ]
 export const scores = { A1: 1, A2: 0, A3: 0, A4: 0, A5: 0, A6: 0, A7: 1, A8: 1, A9: 0, A10: 1 };
 export const options = ['Definitely agree', 'Slightly agree', 'Slightly disagree', 'Definitely disagree']
+
+export const api = 'http://127.0.0.1:5000';

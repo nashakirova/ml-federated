@@ -1,6 +1,6 @@
 import './App.css';
 import React, { useState, useReducer } from 'react';
-import { countries, options, questions, scores } from './constants';
+import { countries, options, questions, scores, api } from './constants';
 import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
 import Select from '@mui/material/Select';
@@ -53,6 +53,26 @@ function App() {
     return (value === options[0] || value === options[1]) && score === 1 ? 1 : (value === options[2] || value === options[3]) && score === 0 ? 1 : 0;
   }
 
+
+  const trainModel = async () => {
+    let answers = [];
+    for (let i = 1; i <= 10; i++) {
+      answers.push(keyScore(state['A' + i], scores['A' + i]))
+    }
+    const response = await fetch(api + '/model', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        answers: answers,
+        verdict: state['diagnosis'],
+      }),
+    });
+
+  }
+
   const handleChange = (event, field) => {
     const localState = state;
     localState[field] = event.target ? event.target.value : event;
@@ -74,7 +94,7 @@ function App() {
 
       , 0));
     forceUpdate();
-    console.log(result);
+    trainModel();
     event.preventDefault();
   }
 
